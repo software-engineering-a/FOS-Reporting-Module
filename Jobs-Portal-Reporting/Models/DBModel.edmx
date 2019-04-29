@@ -1,0 +1,378 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Applications">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="userID" Type="int" />
+          <Property Name="jobID" Type="int" />
+          <Property Name="appliedAt" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Interviews">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="userID" Type="int" />
+          <Property Name="jobID" Type="int" />
+          <Property Name="scheduledTime" Type="datetime" />
+          <Property Name="happendTime" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Jobs">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="title" Type="varchar" MaxLength="500" />
+          <Property Name="description" Type="varchar" MaxLength="500" />
+          <Property Name="designation" Type="varchar" MaxLength="50" />
+          <Property Name="skills" Type="varchar" MaxLength="500" />
+          <Property Name="location" Type="varchar" MaxLength="50" />
+          <Property Name="department" Type="varchar" MaxLength="50" />
+          <Property Name="minEducation" Type="varchar" MaxLength="50" />
+          <Property Name="minExperience" Type="int" />
+          <Property Name="minAge" Type="int" />
+          <Property Name="maxAge" Type="int" />
+          <Property Name="gender" Type="varchar" MaxLength="50" />
+          <Property Name="closingDate" Type="datetime" />
+          <Property Name="salary" Type="int" />
+          <Property Name="benefits" Type="varchar" MaxLength="50" />
+          <Property Name="document" Type="varchar" MaxLength="50" />
+          <Property Name="status" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="role" Type="varchar" MaxLength="50" />
+          <Property Name="firstName" Type="varchar" MaxLength="50" />
+          <Property Name="lastName" Type="varchar" MaxLength="50" />
+          <Property Name="username" Type="varchar" MaxLength="50" />
+          <Property Name="email" Type="varchar" MaxLength="255" />
+          <Property Name="password" Type="varchar" MaxLength="100" />
+          <Property Name="securityQuestion" Type="varchar" MaxLength="100" />
+          <Property Name="securityAnswer" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6013: The table/view 'C:\USERS\DELL\DESKTOP\UNIVERSITY\SEMESTER 8\SE\FINAL\JOBS-PORTAL-REPORTING\JOBS-PORTAL-REPORTING\APP_DATA\SE-PORTAL.MDF.dbo.interviewsConducted' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="interviewsConducted">
+          <Property Name="jobID" Type="int" />
+          <Property Name="conducted" Type="int" />
+        </EntityType>-->
+        <!--Errors Found During Generation:
+warning 6013: The table/view 'C:\USERS\DELL\DESKTOP\UNIVERSITY\SEMESTER 8\SE\FINAL\JOBS-PORTAL-REPORTING\JOBS-PORTAL-REPORTING\APP_DATA\SE-PORTAL.MDF.dbo.interviewsScheduled' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="interviewsScheduled">
+          <Property Name="jobID" Type="int" />
+          <Property Name="scheduled" Type="int" />
+        </EntityType>-->
+        <!--Errors Found During Generation:
+warning 6013: The table/view 'C:\USERS\DELL\DESKTOP\UNIVERSITY\SEMESTER 8\SE\FINAL\JOBS-PORTAL-REPORTING\JOBS-PORTAL-REPORTING\APP_DATA\SE-PORTAL.MDF.dbo.jobApplications' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="jobApplications">
+          <Property Name="ID" Type="int" />
+          <Property Name="Title" Type="varchar" MaxLength="500" />
+          <Property Name="applications" Type="int" />
+        </EntityType>-->
+        <Association Name="FK__Applicati__jobID__4BAC3F29">
+          <End Role="Jobs" Type="Self.Jobs" Multiplicity="0..1" />
+          <End Role="Applications" Type="Self.Applications" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Jobs">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Applications">
+              <PropertyRef Name="jobID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Applicati__userI__4AB81AF0">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Applications" Type="Self.Applications" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Applications">
+              <PropertyRef Name="userID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Interview__jobID__37A5467C">
+          <End Role="Jobs" Type="Self.Jobs" Multiplicity="0..1" />
+          <End Role="Interviews" Type="Self.Interviews" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Jobs">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Interviews">
+              <PropertyRef Name="jobID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Interview__userI__36B12243">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Interviews" Type="Self.Interviews" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Interviews">
+              <PropertyRef Name="userID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ModelStoreContainer">
+          <EntitySet Name="Applications" EntityType="Self.Applications" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Interviews" EntityType="Self.Interviews" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Jobs" EntityType="Self.Jobs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Applicati__jobID__4BAC3F29" Association="Self.FK__Applicati__jobID__4BAC3F29">
+            <End Role="Jobs" EntitySet="Jobs" />
+            <End Role="Applications" EntitySet="Applications" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Applicati__userI__4AB81AF0" Association="Self.FK__Applicati__userI__4AB81AF0">
+            <End Role="User" EntitySet="User" />
+            <End Role="Applications" EntitySet="Applications" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Interview__jobID__37A5467C" Association="Self.FK__Interview__jobID__37A5467C">
+            <End Role="Jobs" EntitySet="Jobs" />
+            <End Role="Interviews" EntitySet="Interviews" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Interview__userI__36B12243" Association="Self.FK__Interview__userI__36B12243">
+            <End Role="User" EntitySet="User" />
+            <End Role="Interviews" EntitySet="Interviews" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Application">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="userID" Type="Int32" />
+          <Property Name="jobID" Type="Int32" />
+          <Property Name="appliedAt" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Job" Relationship="Self.FK__Applicati__jobID__4BAC3F29" FromRole="Applications" ToRole="Jobs" />
+          <NavigationProperty Name="User" Relationship="Self.FK__Applicati__userI__4AB81AF0" FromRole="Applications" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Interview">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="userID" Type="Int32" />
+          <Property Name="jobID" Type="Int32" />
+          <Property Name="scheduledTime" Type="DateTime" Precision="3" />
+          <Property Name="happendTime" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Job" Relationship="Self.FK__Interview__jobID__37A5467C" FromRole="Interviews" ToRole="Jobs" />
+          <NavigationProperty Name="User" Relationship="Self.FK__Interview__userI__36B12243" FromRole="Interviews" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Job">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="title" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="description" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="designation" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="skills" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="location" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="department" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="minEducation" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="minExperience" Type="Int32" />
+          <Property Name="minAge" Type="Int32" />
+          <Property Name="maxAge" Type="Int32" />
+          <Property Name="gender" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="closingDate" Type="DateTime" Precision="3" />
+          <Property Name="salary" Type="Int32" />
+          <Property Name="benefits" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="document" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Applications" Relationship="Self.FK__Applicati__jobID__4BAC3F29" FromRole="Jobs" ToRole="Applications" />
+          <NavigationProperty Name="Interviews" Relationship="Self.FK__Interview__jobID__37A5467C" FromRole="Jobs" ToRole="Interviews" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="role" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="firstName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="lastName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="email" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="password" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="securityQuestion" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="securityAnswer" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Applications" Relationship="Self.FK__Applicati__userI__4AB81AF0" FromRole="User" ToRole="Applications" />
+          <NavigationProperty Name="Interviews" Relationship="Self.FK__Interview__userI__36B12243" FromRole="User" ToRole="Interviews" />
+        </EntityType>
+        <Association Name="FK__Applicati__jobID__4BAC3F29">
+          <End Role="Jobs" Type="Self.Job" Multiplicity="0..1" />
+          <End Role="Applications" Type="Self.Application" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Jobs">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Applications">
+              <PropertyRef Name="jobID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Applicati__userI__4AB81AF0">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Applications" Type="Self.Application" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Applications">
+              <PropertyRef Name="userID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Interview__jobID__37A5467C">
+          <End Role="Jobs" Type="Self.Job" Multiplicity="0..1" />
+          <End Role="Interviews" Type="Self.Interview" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Jobs">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Interviews">
+              <PropertyRef Name="jobID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Interview__userI__36B12243">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Interviews" Type="Self.Interview" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Interviews">
+              <PropertyRef Name="userID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Applications" EntityType="Self.Application" />
+          <EntitySet Name="Interviews" EntityType="Self.Interview" />
+          <EntitySet Name="Jobs" EntityType="Self.Job" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <AssociationSet Name="FK__Applicati__jobID__4BAC3F29" Association="Self.FK__Applicati__jobID__4BAC3F29">
+            <End Role="Jobs" EntitySet="Jobs" />
+            <End Role="Applications" EntitySet="Applications" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Applicati__userI__4AB81AF0" Association="Self.FK__Applicati__userI__4AB81AF0">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Applications" EntitySet="Applications" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Interview__jobID__37A5467C" Association="Self.FK__Interview__jobID__37A5467C">
+            <End Role="Jobs" EntitySet="Jobs" />
+            <End Role="Interviews" EntitySet="Interviews" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Interview__userI__36B12243" Association="Self.FK__Interview__userI__36B12243">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Interviews" EntitySet="Interviews" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ModelStoreContainer" CdmEntityContainer="DBEntities">
+          <EntitySetMapping Name="Applications">
+            <EntityTypeMapping TypeName="Model.Application">
+              <MappingFragment StoreEntitySet="Applications">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="userID" ColumnName="userID" />
+                <ScalarProperty Name="jobID" ColumnName="jobID" />
+                <ScalarProperty Name="appliedAt" ColumnName="appliedAt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Interviews">
+            <EntityTypeMapping TypeName="Model.Interview">
+              <MappingFragment StoreEntitySet="Interviews">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="userID" ColumnName="userID" />
+                <ScalarProperty Name="jobID" ColumnName="jobID" />
+                <ScalarProperty Name="scheduledTime" ColumnName="scheduledTime" />
+                <ScalarProperty Name="happendTime" ColumnName="happendTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Jobs">
+            <EntityTypeMapping TypeName="Model.Job">
+              <MappingFragment StoreEntitySet="Jobs">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="designation" ColumnName="designation" />
+                <ScalarProperty Name="skills" ColumnName="skills" />
+                <ScalarProperty Name="location" ColumnName="location" />
+                <ScalarProperty Name="department" ColumnName="department" />
+                <ScalarProperty Name="minEducation" ColumnName="minEducation" />
+                <ScalarProperty Name="minExperience" ColumnName="minExperience" />
+                <ScalarProperty Name="minAge" ColumnName="minAge" />
+                <ScalarProperty Name="maxAge" ColumnName="maxAge" />
+                <ScalarProperty Name="gender" ColumnName="gender" />
+                <ScalarProperty Name="closingDate" ColumnName="closingDate" />
+                <ScalarProperty Name="salary" ColumnName="salary" />
+                <ScalarProperty Name="benefits" ColumnName="benefits" />
+                <ScalarProperty Name="document" ColumnName="document" />
+                <ScalarProperty Name="status" ColumnName="status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="Model.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="role" ColumnName="role" />
+                <ScalarProperty Name="firstName" ColumnName="firstName" />
+                <ScalarProperty Name="lastName" ColumnName="lastName" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="securityQuestion" ColumnName="securityQuestion" />
+                <ScalarProperty Name="securityAnswer" ColumnName="securityAnswer" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,31 +1,313 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+﻿@model IEnumerable<Jobs_Portal_Reporting.Models.User>
+
+
+@{
+    ViewBag.Title = "Reporting Module";
 }
+<br /><br />
+<!--     <div style="width: 400px; display: inline-block;">
+    <canvas id="myChart"></canvas>
+</div> -->
+<!-- How many applications for job/internships have been received in a time period? -->
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+
+<div class="container info-cards">
+    <div class="row">
+        <div class="col-md-4 col-lg-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title text-center">Total Applications</h3>
+                </div>
+                <div class="panel-body">
+                    <ul class="time-nav text-center">
+                        <li>
+                            <a onclick="filterApplications('day')" href='#'>1 Day</a>
+                        </li>
+                        <li>
+                            <a onclick="filterApplications('week')" href='#'>7 Days</a>
+                        </li>
+                        <li>
+                            <a onclick="filterApplications('month')" href='#'>30 Days</a>
+                        </li>
+                        <li>
+                            <a onclick="filterApplications('custom')" href='#'>Custom</a>
+                        </li>
+                    </ul>
+
+                    <h1 class="text-center" id="applicationsCount">0</h1>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title text-center">Interviews Scheduled</h3>
+                </div>
+                <div class="panel-body">
+                    <ul class="time-nav text-center">
+                        <li>
+                            <a onclick="filterScheduledInterviews('day')" href='#'>1 Day</a>
+                        </li>
+                        <li>
+                            <a onclick="filterScheduledInterviews('week')" href='#'>7 Days</a>
+                        </li>
+                        <li>
+                            <a onclick="filterScheduledInterviews('month')" href='#'>30 Days</a>
+                        </li>
+                        <li>
+                            <a onclick="filterScheduledInterviews('custom')" href='#'>Custom</a>
+                        </li>
+                    </ul>
+
+                    <h1 class="text-center" id="scheduleInterviewsCount">0</h1>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title text-center">Interviews On-Time</h3>
+                </div>
+                <div class="panel-body">
+                    <ul class="time-nav text-center">
+                        <li>
+                            <a onclick="filterOnTimeInterviews('day')" href='#'>1 Day</a>
+                        </li>
+                        <li>
+                            <a onclick="filterOnTimeInterviews('week')" href='#'>7 Days</a>
+                        </li>
+                        <li>
+                            <a onclick="filterOnTimeInterviews('month')" href='#'>30 Days</a>
+                        </li>
+                        <li>
+                            <a onclick="filterOnTimeInterviews('custom')" href='#'>Custom</a>
+                        </li>
+                    </ul>
+
+                    <h1 class="text-center" id="onTimeInterviewsCount">0</h1>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+<div class="container">
+
+    <table id="jobs-table" class="table table-bordered"></table>
+
+</div>
+
+
+<div class="modal fade" id="customTimeModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Filter</h4>
+            </div>
+            <form action="#" method="POST" role="form">
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label for="start">Time From</label>
+                        <input type="datetime-local" class="form-control" id="start" placeholder="">
+                    </div>
+                    <div class="form-group">
+                        <label for="end">Time To</label>
+                        <input type="datetime-local" class="form-control" id="end" placeholder="">
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" onclick="filterCustom()" class="btn btn-primary">Filter</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
+
+
+<script>
+    let allApplications = [];
+    let allJobs = [];
+    let allInterviews = [];
+    let TabData = [];
+
+    function getJobs() {
+        return axios.get('/api/jobs');
+    }
+
+    function getApplications() {
+        return axios.get('/api/applications');
+    }
+
+    function getInterviews() {
+        return axios.get('/api/interview');
+    }
+
+    window.onload = () => {
+        axios.all([getApplications(), getInterviews(), getJobs()])
+            .then(axios.spread(function (app, intrm, jbs) {
+                allApplications = app.data;
+                allInterviews = intrm.data;
+                allJobs = jbs.data;
+
+                let scheduled = 0;
+                onTime = 0;
+                allInterviews.forEach(interview => {
+                    if (Date.parse(interview.scheduledTime) > Date.now()) {
+                        scheduled = scheduled + 1;
+                    }
+                    if (interview.happenedTime !== null && Date.parse(interview.happenedTime) - Date.parse(interview.scheduledTime) < 60 * 60 * 1000) {
+                        onTime = onTime + 1;
+                    }
+                });
+
+                $('#applicationsCount').html(allApplications.length);
+                $('#scheduleInterviewsCount').html(scheduled);
+                $('#onTimeInterviewsCount').html(onTime);
+
+                allJobs.forEach(job => {
+                    let tabR = []
+
+                    tabR.push(job.title);
+
+                    tabR.push((allApplications.filter(function (application) {
+                        return application.jobID === job.ID
+                    })).length);
+
+                    tabR.push((allInterviews.filter(function (interview) {
+                        return (interview.jobID === job.ID) && (Date.parse(interview.scheduledTime) > Date.now());
+                    })).length);
+
+                    tabR.push((allInterviews.filter(function (interview) {
+                        return (interview.jobID === job.ID);
+                    })).length - tabR[2]);
+
+                    TabData.push(tabR);
+                });
+                $('#jobs-table').DataTable({
+                    data: TabData,
+                    columns: [
+                        {
+                            title: "Job Title"
+                        },
+                        {
+                            title: "Applications"
+                        },
+                        {
+                            title: "Scheduled Interviews"
+                        },
+                        {
+                            title: "Conducted Interviews"
+                        }
+                    ]
+                });
+            }));
+    }
+
+    let modal = '';
+
+    function filterApplications(time) {
+        if (time == 'day') {
+            const count = allApplications.filter(application => {
+                return (Date.now() - Date.parse(application.appliedAt)) < 24 * 60 * 60 * 1000
+            }).length;
+            $('#applicationsCount').html(count);
+        } else if (time == 'week') {
+            const count = allApplications.filter(application => {
+                return (Date.now() - Date.parse(application.appliedAt)) < 7 * 24 * 60 * 60 * 1000
+            }).length;
+            $('#applicationsCount').html(count);
+        } else if (time == 'month') {
+            const count = allApplications.filter(application => {
+                return (Date.now() - Date.parse(application.appliedAt)) < 30 * 24 * 60 * 60 * 1000
+            }).length;
+            $('#applicationsCount').html(count);
+        } else {
+            modal = 'applications'
+            $('#customTimeModal').modal('show');
+        }
+    }
+
+
+    function filterScheduledInterviews(time) {
+        if (time == 'day') {
+            const count = allInterviews.filter(interview => {
+                return (Date.now() - Date.parse(interview.scheduledTime)) < 24 * 60 * 60 * 1000
+            }).length;
+            $('#scheduleInterviewsCount').html(count);
+        } else if (time == 'week') {
+            const count = allInterviews.filter(interview => {
+                return (Date.now() - Date.parse(interview.scheduledTime)) < 7 * 24 * 60 * 60 * 1000
+            }).length;
+            $('#scheduleInterviewsCount').html(count);
+        } else if (time == 'month') {
+            const count = allInterviews.filter(interview => {
+                return (Date.now() - Date.parse(interview.scheduledTime)) < 30 * 24 * 60 * 60 * 1000
+            }).length;
+            $('#scheduleInterviewsCount').html(count);
+        } else {
+            modal = 'scheduleInterviews'
+            $('#customTimeModal').modal('show');
+        }
+    }
+
+
+    function filterOnTimeInterviews(time) {
+        if (time == 'day') {
+            const count = allInterviews.filter(interview => {
+                return interview.happenedTime && (Date.parse(interview.happenedTime) < Date.now()) && (Date.now() - Date.parse(interview.scheduledTime)) < 24 * 60 * 60 * 1000
+            }).length;
+            $('#onTimeInterviewsCount').html(count);
+        } else if (time == 'week') {
+            const count = allInterviews.filter(interview => {
+                return interview.happenedTime && (Date.parse(interview.happenedTime) < Date.now()) && (Date.now() - Date.parse(interview.scheduledTime)) < 7 * 24 * 60 * 60 * 1000
+            }).length;
+            $('#onTimeInterviewsCount').html(count);
+        } else if (time == 'month') {
+            const count = allInterviews.filter(interview => {
+                return interview.happenedTime && (Date.parse(interview.happenedTime) < Date.now()) && (Date.now() - Date.parse(interview.scheduledTime)) < 30 * 24 * 60 * 60 * 1000
+            }).length;
+            $('#onTimeInterviewsCount').html(count);
+        } else {
+            modal = 'onTimeInterviews'
+            $('#customTimeModal').modal('show');
+        }
+    }
+
+
+
+    function filterCustom() {
+        let start = Date.parse($('#start').val());
+        let end = Date.parse($('#end').val());
+        if (!start || !end) {
+            alert('Please enter valid start and end date.');
+            return;
+        }
+
+        if (start > end) {
+            alert('Start date must not be after end date');
+            return;
+        }
+
+        if (modal === 'applications') {
+            const count = allApplications.filter(application => {
+                return Date.parse(application.appliedAt) <= end && Date.parse(application.appliedAt) >= start
+            }).length;
+            $('#applicationsCount').html(count);
+        } else if (modal === 'scheduleInterviews') {
+            const count = allInterviews.filter(interview => {
+                return Date.parse(interview.scheduledTime) <= end && Date.parse(interview.appliedAt) >= start
+            }).length;
+        } else if (modal === 'onTimeInterviews') {
+            const count = allInterviews.filter(interview => {
+                return interview.happenedTime && Date.parse(interview.happenedTime) <= end && Date.parse(interview.appliedAt) >= start
+            }).length;
+        }
+
+        modal = ''
+        $('#customTimeModal').modal('toggle');
+    }
+</script>

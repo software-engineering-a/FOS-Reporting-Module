@@ -1,24 +1,46 @@
-﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+﻿html,
+body {
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
 }
 
-/* Set padding to keep content from hitting the edges */
-.body-content {
-    padding-left: 15px;
-    padding-right: 15px;
+.info-cards {
+    margin-top: 50px;
 }
 
-/* Override the default bootstrap behavior where horizontal description lists 
-   will truncate terms that are too long to fit in the left column 
-*/
-.dl-horizontal dt {
-    white-space: normal;
+.time-nav {
+    list-style: none;
+    padding-inline-start: 0;
 }
 
-/* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
-textarea {
-    max-width: 280px;
+    .time-nav li {
+        display: inline;
+    }
+
+        .time-nav li::after {
+            content: '  ';
+        }
+
+        .time-nav li:nth-last-child(0) {
+            content: '  ';
+        }
+
+    .time-nav a {
+        color: white;
+        font-weight: bold;
+    }
+
+h1 {
+    color: white;
+    font-weight: bold;
+}
+
+.time-nav a:hover {
+    text-decoration: none;
+}
+
+.panel-body {
+    background: #337AB7
 }
